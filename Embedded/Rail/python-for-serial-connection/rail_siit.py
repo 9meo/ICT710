@@ -19,11 +19,12 @@ __email__ = "ukrishva@gmail.com"
 ser = serial.Serial()
 ser.baudrate = 9600
 ser.port = 'COM4'# pc port
-id = 1 #SIIT's ID is = 1
-ip = "sw-final-project.appspot.com"
-GREEN = 1000
-YELLOW1 = 750
+ip = "192.168.137.90:8080"
+GREEN = 350
+YELLOW1 = 300
 YELLOW2 = 200
+DISTANCE_URL = "getlocation_siit"
+INSERT_TRAFF_URL = "insert_traffic_siit"
 #this line can be written as "192.168.1.10:8080"
 try:
     ser.open()
@@ -31,7 +32,8 @@ try:
     while (1):
         # HTTP request
         try:
-            url = "http://%s/getlocation?train_no=%d" %(ip,id)  # Local Addr
+            url = "http://%s/%s" %(ip,DISTANCE_URL)  # Local Addr
+            print("Trying to connect to %s" % (url))
             resp = urllib2.urlopen(url)
             result = json.load(resp)
             distance = result['distance_track']
@@ -55,13 +57,13 @@ try:
                 light = 'red'
                 j = 0
                 ser.write('r')
-                url = "http://%s/insert_traffic?train_no=%d&light=%s" \
-                       % (ip,id, light)
+                url = "http://%s/%s?light=%s" \
+                       % (ip,INSERT_TRAFF_URL, light)
                 resp = urllib2.urlopen(url)
                 time.sleep(10)
                 light = 'blink'
-                url = "http://%s/insert_traffic?train_no=%d&light=%s" \
-                      % (ip, id, light)
+                url = "http://%s/%s?light=%s" \
+                      % (ip, INSERT_TRAFF_URL, light)
                 resp = urllib2.urlopen(url)
                 while j < 15:
                     ser.write('c')
@@ -71,14 +73,14 @@ try:
                     j += 1
                 ser.write('g')
                 light = 'green'
-                url = "http://%s/insert_traffic?train_no=%d&light=%s" \
-                      % (ip, id, light)
+                url = "http://%s/%s?light=%s" \
+                      % (ip, INSERT_TRAFF_URL, light)
                 resp = urllib2.urlopen(url)
                 time.sleep(5)
                 print('Train takes off')
             print("Traffic Light:%s" % (light))
-            url = "http://%s/insert_traffic?train_no=%d&light=%s" \
-                  % (ip, id, light)
+            url = "http://%s/%s?light=%s" \
+                  % (ip, INSERT_TRAFF_URL, light)
             resp = urllib2.urlopen(url)
             print('==================')
         except IOError:
