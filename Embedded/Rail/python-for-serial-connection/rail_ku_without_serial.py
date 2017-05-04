@@ -15,19 +15,14 @@ __version__ = "1.0.0"
 __email__ = "ukrishva@gmail.com"
 
 # For SIIT
-# Start Serial connection
-ser = serial.Serial()
-ser.baudrate = 9600
-ser.port = 'COM4'# pc port
 #ip = "192.168.137.90:8080"
 ip = "sansarn.com/final_project"
 #this line can be written as "192.168.1.10:8080"
 YELLOW1 = 300
 YELLOW2 = 200
-DISTANCE_URL = "getlocation_siit"
-INSERT_TRAFF_URL = "insert_traffic_siit"
+DISTANCE_URL = "getlocation_ku"
+INSERT_TRAFF_URL = "insert_traffic_ku"
 try:
-    ser.open()
     i = 0
     while (1):
         # HTTP request
@@ -42,21 +37,14 @@ try:
             light = ''
             if distance > YELLOW1:
                 light = 'green'
-                ser.write('g')
             elif (distance < YELLOW1) and (distance > YELLOW2):
                 light = 'yellow1'
-                ser.write('y')
             elif (distance < YELLOW2) and (distance > 10):
                 light = 'yellow2'
-                ser.write('p')
-            # elif distance < 9:
-            #     ser.write('r')
-            #     light = 'red'
             elif distance < 50:
                 print('Start Blinking')
                 light = 'red'
                 j = 0
-                ser.write('r')
                 url = "http://%s/%s?light=%s" \
                        % (ip,INSERT_TRAFF_URL, light)
                 resp = urllib2.urlopen(url)
@@ -66,12 +54,11 @@ try:
                       % (ip, INSERT_TRAFF_URL, light)
                 resp = urllib2.urlopen(url)
                 while j < 15:
-                    ser.write('c')
+                    #ser.write('c')
                     time.sleep(.5)
-                    ser.write('r')
+                    #ser.write('r')
                     time.sleep(.5)
                     j += 1
-                ser.write('g')
                 light = 'green'
                 url = "http://%s/%s?light=%s" \
                       % (ip, INSERT_TRAFF_URL, light)
@@ -95,5 +82,3 @@ except IOError:
     print('There is something wrong with serial connection.')
 finally:
     ser.close()
-# End Serial connection
-# ser.isOpen()

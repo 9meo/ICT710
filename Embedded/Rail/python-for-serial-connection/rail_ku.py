@@ -18,10 +18,10 @@ __email__ = "ukrishva@gmail.com"
 # Start Serial connection
 ser = serial.Serial()
 ser.baudrate = 9600
-ser.port = 'COM5'# pc port
-ip = "192.168.137.90:8080"
+ser.port = 'COM4'# pc port
+#ip = "192.168.137.90:8080"
+ip = "sansarn.com/final_project"
 #this line can be written as "192.168.1.10:8080"
-GREEN = 350
 YELLOW1 = 300
 YELLOW2 = 200
 DISTANCE_URL = "getlocation_ku"
@@ -40,19 +40,19 @@ try:
             print("Distance:%d" % (result['distance_track']))
             print("Next station:%s" % (result['next_station']))
             light = ''
-            if distance > GREEN:
+            if distance > YELLOW1:
                 light = 'green'
                 ser.write('g')
-            elif (distance < GREEN) and (distance > YELLOW1):
+            elif (distance < YELLOW1) and (distance > YELLOW2):
                 light = 'yellow1'
                 ser.write('y')
-            elif (distance < YELLOW1) and (distance > YELLOW2):
+            elif (distance < YELLOW2) and (distance > 10):
                 light = 'yellow2'
                 ser.write('p')
-            elif (distance < YELLOW2) and (distance > 0):
-                ser.write('r')
-                light = 'red'
-            elif distance == 0:
+            # elif distance < 9:
+            #     ser.write('r')
+            #     light = 'red'
+            elif distance < 50:
                 print('Start Blinking')
                 light = 'red'
                 j = 0
