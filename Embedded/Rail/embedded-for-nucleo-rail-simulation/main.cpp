@@ -26,7 +26,7 @@ void lamp(char c){
             led_green = 0;
             break;
         case 'y':
-            led_yellow2 = 0;
+            led_yellow2 = 1;
             led_yellow1 = 1;
             led_red = 0;
             led_green = 0;
