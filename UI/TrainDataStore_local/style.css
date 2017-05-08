@@ -1,0 +1,36 @@
+#sidebar {
+			width: 20%;
+			height: 98%;
+			position: fixed;
+			background-color: #393f4f;
+}
+#sidebar #head {
+  background-color: #3edcc7;
+  line-height: 50px;
+  display: block;
+  text-align: center;
+	color: white;
+	font-family: verdana;
+	font-size: 16px;
+}
+#dvMap {
+	float: right;
+}
+.myTextbox {
+	background: #393f4f;
+	border: 1.5px solid #5f6677;
+-webkit-border-radius: 30px;
+-moz-border-radius: 30px;
+border-radius: 15px;
+outline:0;
+height:25px;
+width: 200px;
+	text-align: center;
+	margin-left: 37px;
+}
+.myTitleFont {
+	font-family: verdana;
+	color: #3edcc7;
+	font-size: 11px;
+	margin-left: 12px;
+}

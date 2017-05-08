@@ -1,0 +1,170 @@
+<html>
+<head>
+	<style type="text/css">
+		#sidebar {
+			width: 20%;
+			height: 100%;
+			position: fixed;
+			background-color: #393f4f;
+		}
+		#sidebar #head {
+		  background-color: #FF9E9D;
+		  line-height: 50px;
+		  display: block;
+		  text-align: center;
+			color: white;
+			font-family: verdana;
+			font-size: 16px;
+		}
+		#dvMap {
+			float: right;
+		}
+		.row input[type="text"] {
+			background: #393f4f;
+			border: 1.5px solid #3edcc7;
+			border-radius: 10px;
+			outline:0;
+			height: 30px;
+			width: 200px;
+			text-align: center;
+			margin-left: 40px;
+			color: #FF9E9D;
+		}
+		.myTitleFont {
+			font-family: verdana;
+			color: #3edcc7;
+			font-size: 11px;
+			margin-left: 45px;
+		}
+
+	</style>
+	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+	<!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+	<link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyAqOJzslL80RoLHndQtRlIZzSotYG4eI3g"></script>
+    <script>
+        loop = 0;
+        direction=0;
+         var myLatlng ;
+        function getPosition()
+        {
+
+         $(document).ready(function() {
+
+		   $.getJSON('http://192.168.137.90:8080/getlocation_siit', function(data) {
+
+				SetMarker(data.latitude, data.longtitude);
+				// map.panTo(new google.maps.LatLng(data.latitude, data.longitude));
+				$('#PreviousStation').val(data.start_station);
+				$('#NextStation').val(data.next_station);
+				$('#Distance').val(data.distance_track);
+		   });
+
+		   $.getJSON('http://192.168.137.90:8080/get_traffic_siit', function(data) {
+				$('#TrafficLight').val(data.light);
+		   });
+
+         });
+        }
+        function MovePosition() {
+
+            getPosition();
+            //var t = setTimeout(MovePosition, 2000);
+            setTimeout(MovePosition, 1000);
+
+        }
+
+        var directionsDisplay;
+        var directionsService = new google.maps.DirectionsService();
+        directionsDisplay = new google.maps.DirectionsRenderer();
+        var markers = [
+
+
+        ];
+
+
+        window.onload = function () {
+            LoadMap();
+        };
+
+        var map;
+        var marker;
+        function LoadMap() {
+            var mapOptions = {
+                center: new google.maps.LatLng(35.76525267, 140.3859186),
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
+            // SetMarker(0);
+			SetMarker(35.76525267, 140.3859186);
+            directionsDisplay.setMap(map);
+            calcRoute();
+            MovePosition();
+        }
+
+        function SetMarker(latitude,longitude) {
+            //Remove previous Marker.
+            if (marker != null) {
+                marker.setMap(null);
+            }
+
+            //Set Marker on Map.
+
+            var myLatlng = new google.maps.LatLng(latitude,longitude);
+            map.panTo(new google.maps.LatLng(latitude,longitude));
+
+            var image = {
+                url: 'http://www.panyasoft.com/tr.png',
+                // This marker is 20 pixels wide by 32 pixels high.
+                size: new google.maps.Size(32, 32),
+                // The origin for this image is (0, 0).
+                origin: new google.maps.Point(0, 0),
+                // The anchor for this image is the base of the flagpole at (0, 32).
+
+            };
+            marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+               // title: data.title,
+                icon: image
+            });
+
+            //Create and open InfoWindow.
+           // var infoWindow = new google.maps.InfoWindow();
+           // infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.description + "</div>");
+           //infoWindow.open(map, marker);
+        }
+        function calcRoute() {
+
+        }
+
+    </script>
+</head>
+<body >
+	<div class="container" onclick="MovePosition()">
+		<aside id="sidebar">
+			<div id="head"><i class="fa fa-train" style="font-size:22px;margin-right:5px;"></i>Train Status</div>
+			<div class="row">
+				<p class="myTitleFont" style="margin-top: 20px;"><b>Previous Station<b></p>
+				<input type="text" id="PreviousStation">
+
+				<i class="fa fa-angle-double-down" style="font-size:30px;color:#3edcc7;margin-left:135px;margin-top: 13px;"></i>
+
+				<p class="myTitleFont"><b>Next Station<b></p>
+				<input type="text" id="NextStation">
+
+				<p class="myTitleFont" style="margin-top: 30px;"><b>Distance<b></p>
+				<input type="text" id="Distance">
+
+				<p class="myTitleFont" style="margin-top: 30px;"><b>Traffic Light<b></p>
+				<input type="text" id="TrafficLight">
+
+			</div>
+		</aside>
+		<div id="dvMap" style="width: 80%; height: 100%"></div>
+	</div>
+</body>
+</html>
